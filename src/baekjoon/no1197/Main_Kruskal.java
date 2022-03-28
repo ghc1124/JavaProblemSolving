@@ -8,9 +8,12 @@ import java.util.StringTokenizer;
 
 /**
  * Kruskal Algorithm
+ * Union-Find 알고리즘 적용(사이클이 없는 트리를 만들기 위해)
+ * Edge 배열을 만들고 그리디한 방법으로 가장 가중치가 작은 간선 선택
+ * 정점 개수 - 1개의 간선이 선택되면 마무리
  */
 
-public class Main {
+public class Main_Kruskal {
 
     private static class Edge implements Comparable<Edge> {
 
