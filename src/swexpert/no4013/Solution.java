@@ -34,7 +34,6 @@ public class Solution {
             // 초깃값 저장. 인덱스를 저장
             for (int i = 0; i < 4; i++) {
                 int[] curr = new int[3];
-                curr[0] = 0;
                 curr[1] = 2;
                 curr[2] = 6;
 
