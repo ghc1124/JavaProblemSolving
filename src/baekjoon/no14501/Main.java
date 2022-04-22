@@ -20,11 +20,8 @@ public class Main {
         int[] dp = new int[N + 1];
 
         for (int i = N - 1; i >= 0; i--) {
-            if (i + pay[i][0] <= N) {
-                dp[i] = Math.max(dp[i + pay[i][0]] + pay[i][1], dp[i + 1]);
-            } else {
-                dp[i] = dp[i + 1];
-            }
+            if (i + pay[i][0] <= N) dp[i] = Math.max(pay[i][1] + dp[i + pay[i][0]], dp[i + 1]);
+            else dp[i] = dp[i + 1];
         }
 
         System.out.println(dp[0]);
