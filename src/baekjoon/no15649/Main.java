@@ -1,38 +1,42 @@
 package baekjoon.no15649;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    private static StringBuilder result = new StringBuilder();
+    private static int N, M;
+    private static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int N = scanner.nextInt();
-        int M = scanner.nextInt();
-        int[] nums = new int[N]; // 1 2 3
-        boolean[] check = new boolean[N]; // false false false
-        for (int i = 0; i < N; i++) {
-            nums[i] = i + 1;
-        }
-        permutation(nums, check, 0, M, new StringBuilder());
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-        System.out.println(result);
+        StringTokenizer tokenizer = new StringTokenizer(reader.readLine());
+
+        N = Integer.parseInt(tokenizer.nextToken());
+        M = Integer.parseInt(tokenizer.nextToken());
+
+        permutation(0, new StringBuilder(), new boolean[N + 1]);
+
+        System.out.println(sb);
     }
 
-    private static void permutation(int[] nums, boolean[] check, int count, int M, StringBuilder sb) {
-        if (count == M) {
-            result.append(sb).append("\n");
+    private static void permutation(int cnt, StringBuilder curr, boolean[] selected) {
+        if (cnt == M) {
+            sb.append(curr).append("\n");
             return;
         }
 
-        for (int i = 0; i < nums.length; i++) {
-            if (!check[i]) {
-                check[i] = true; // 1을 뽑음
-                sb.append(nums[i]).append(" ");
-                permutation(nums, check, count + 1, M, sb);
-                sb.setLength(sb.length() - 2);
-                check[i] = false;
+        for (int i = 1; i <= N; i++) {
+            if (!selected[i]) {
+                selected[i] = true;
+                int temp = curr.length();
+                curr.append(i).append(" ");
+                permutation(cnt + 1, curr, selected);
+                selected[i] = false;
+                curr.setLength(temp);
             }
         }
     }
