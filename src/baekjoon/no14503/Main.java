@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    private static int[][] directions = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, };
+    private static final int[][] directions = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, };
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -68,10 +68,8 @@ public class Main {
                     r = dy;
                     c = dx;
                 } else {
-                    break Outer;
+                    break;
                 }
-            } else {
-                break;
             }
         }
 
