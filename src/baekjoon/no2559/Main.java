@@ -9,32 +9,31 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
         StringTokenizer tokenizer = new StringTokenizer(reader.readLine());
-        int N = Integer.parseInt(tokenizer.nextToken());
-        int K = Integer.parseInt(tokenizer.nextToken());
+        int N = Integer.parseInt(tokenizer.nextToken());    // 전체 날짜 수
+        int K = Integer.parseInt(tokenizer.nextToken());    // 연속적인 날짜의 수
+
         tokenizer = new StringTokenizer(reader.readLine());
         int[] temp = new int[N];
         for (int i = 0; i < N; i++) {
             temp[i] = Integer.parseInt(tokenizer.nextToken());
         }
 
-        int answer = Integer.MIN_VALUE;
-
-        int sum = 0;
-
-        // 최초 합
+        int sum = 0;    // 합을 저장하기 위한 변수 -> 일단 처음 K개의 합으로 초기화
         for (int i = 0; i < K; i++) {
             sum += temp[i];
         }
 
-        answer = Math.max(answer, sum);
+        int ans = sum;    // 온도를 저장하기 위한 변수
 
-        for (int i = 1; i <= N - K; i++) {
-            sum = sum - temp[i - 1] + temp[i + (K - 1)];
-            answer = Math.max(answer, sum);
+        for (int i = K; i < N; i++) {
+            sum -= temp[i - K];
+            sum += temp[i];
+            ans = Math.max(ans, sum);
         }
 
-        System.out.println(answer);
+        System.out.println(ans);
     }
 
 }
