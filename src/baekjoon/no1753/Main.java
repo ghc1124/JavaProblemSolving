@@ -5,79 +5,88 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+/**
+ * 1. 다익스트라 알고리즘(한 정점에서 다른 모든 정점으로의 최단거리 구하는 알고리즘)
+ * 2. 시간 복잡도 -> PQ(힙) 이용 -> 대충 O(NlogN)...?
+ * 3. 값 범위 -> 가중치가 10 이하이므로 int로 가능!
+ */
+
 public class Main {
 
-	private static class Node implements Comparable<Node> {
+    private static class Node implements Comparable<Node> {
 
-		int vertex;
-		int distance;
+        int to;     // 도착 정점
+        int weight; // 시작 정점에서 이 정점까지 최단 경로 저장
 
-		public Node(int vertex, int distance) {
-			this.vertex = vertex;
-			this.distance = distance;
-		}
+        public Node(int to, int weight) {
+            this.to = to;
+            this.weight = weight;
+        }
 
-		@Override
-		public int compareTo(Node o) {
-			return this.distance - o.distance;
-		}
+        @Override
+        public int compareTo(Node o) {
+            return this.weight - o.weight;
+        }
 
-	}
+    }
 
-	public static void main(String[] args) throws IOException {
-		StringBuilder sb = new StringBuilder();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer tokenizer = new StringTokenizer(reader.readLine());
-		int V = Integer.parseInt(tokenizer.nextToken()); // 정점 개수
-		int E = Integer.parseInt(tokenizer.nextToken()); // 간선 개수
-		int K = Integer.parseInt(reader.readLine()); // 시작 정점
+    public static void main(String[] args) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-		// 리스트 초기화
-		List<List<Node>> list = new ArrayList<>(V + 1);
-		for (int i = 0; i < V + 1; i++) {
-			list.add(new ArrayList<>());
-		}
+        StringTokenizer tokenizer = new StringTokenizer(reader.readLine());
+        int V = Integer.parseInt(tokenizer.nextToken());    // 정점 개수
+        int E = Integer.parseInt(tokenizer.nextToken());    // 간선 개수
 
-		for (int i = 0; i < E; i++) {
-			tokenizer = new StringTokenizer(reader.readLine());
-			int u = Integer.parseInt(tokenizer.nextToken()); // 시작
-			int v = Integer.parseInt(tokenizer.nextToken()); // 끝
-			int w = Integer.parseInt(tokenizer.nextToken()); // 가중치
+        // 만들것 -> 인접리스트, 최단경로 저장 배열(값 비교 위해), 정점 확정 여부
+        List<Node>[] adjList = new List[V + 1];
+        for (int i = 0; i <= V; i++) {
+            adjList[i] = new ArrayList<>();
+        }
 
-			list.get(u).add(new Node(v, w));
-		}
+        int start = Integer.parseInt(reader.readLine());    // 시작 정점
 
-		boolean[] visited = new boolean[V + 1]; // 탐색 여부 저장
-		int[] distance = new int[V + 1]; // 각 정점 별 최소 이동거리 저장
-		Arrays.fill(distance, Integer.MAX_VALUE);
-		distance[K] = 0;
+        int[] weights = new int[V + 1];
+        Arrays.fill(weights, Integer.MAX_VALUE);
+        weights[start] = 0; // 자기 자신으로의 거리는 0이다.
 
-		PriorityQueue<Node> pq = new PriorityQueue<>();
-		pq.offer(new Node(K, distance[K]));
+        boolean[] isDefined = new boolean[V + 1];
 
-		while (!pq.isEmpty()) {
-			Node current = pq.poll();
+        for (int i = 0; i < E; i++) {
+            tokenizer = new StringTokenizer(reader.readLine());
+            int from = Integer.parseInt(tokenizer.nextToken());     // 시작
+            int to = Integer.parseInt(tokenizer.nextToken());       // 끝
+            int weight = Integer.parseInt(tokenizer.nextToken());   // 가중치
 
-			if (visited[current.vertex]) continue;
+            // 유향 그래프이다!
+            adjList[from].add(new Node(to, weight));
+        }
 
-			visited[current.vertex] = true;
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.offer(new Node(start, 0));
 
-			for (Node node : list.get(current.vertex)) {
-				if (!visited[node.vertex] && distance[node.vertex] > distance[current.vertex] + node.distance) {
-					distance[node.vertex] = distance[current.vertex] + node.distance;
-					pq.offer(new Node(node.vertex, distance[node.vertex]));
-				}
-			}
-		}
+        while (!pq.isEmpty()) {
+            Node curr = pq.poll();
 
-		for (int i = 1; i < V + 1; i++) {
-			if (distance[i] == Integer.MAX_VALUE) sb.append("INF");
-			else sb.append(distance[i]);
+            if (isDefined[curr.to]) continue;
 
-			sb.append("\n");
-		}
+            isDefined[curr.to] = true;
 
-		System.out.println(sb);
-	}
-	
+            // 현재 선택된 정점에서 갈 수 있는 모든 다른 노드를 살핀다.
+            for (Node node : adjList[curr.to]) {
+                // 만약, 지금 선택된 정점을 통해서 가는 경로가 더 최단인 경우
+                if (!isDefined[node.to] && weights[node.to] > curr.weight + node.weight) {
+                    weights[node.to] = curr.weight + node.weight;
+                    pq.offer(new Node(node.to, weights[node.to]));
+                }
+            }
+        }
+
+        for (int i = 1; i <= V; i++) {
+            sb.append(weights[i] == Integer.MAX_VALUE ? "INF" : weights[i]).append("\n");
+        }
+
+        System.out.println(sb);
+    }
+
 }
