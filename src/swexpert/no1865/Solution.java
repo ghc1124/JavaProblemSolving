@@ -50,12 +50,9 @@ public class Solution {
 
         for (int i = 0; i < N; i++) {
             if (!isVisited[i]) {
-                double temp = curr;
                 isVisited[i] = true;
-                curr *= percent[cnt][i] * 0.01;
-                permutation(percent, isVisited, curr, N, cnt + 1);
+                permutation(percent, isVisited, curr * percent[cnt][i] * 0.01, N, cnt + 1);
                 isVisited[i] = false;
-                curr = temp;
             }
         }
     }

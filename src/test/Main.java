@@ -3,17 +3,18 @@ package test;
 public class Main {
 
     public static void main(String[] args) {
-        recursive("ASADADAS", 0);
+        recur(1);
     }
 
-    private static void recursive(String target, int index) {
-        if (index == target.length()) {
+    private static void recur(int i) {
+        if (i == 6) {
+            System.out.println();
             return;
         }
 
-        System.out.print(target.charAt(index));
-        recursive(target, index + 1);
-        System.out.print(target.charAt(index));
+        System.out.print(i * 2 + 1 + " ");
+        recur(i + 1);
+        System.out.print(i * 2 + 1 + " ");
     }
 
 }
